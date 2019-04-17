@@ -19,6 +19,8 @@ def after(response):
   app.logger.debug('[SEND RESPONSE] Body\n%s', response.get_data())
   return response
 
+#init redis connection here, because of running this script via "flask run"
+r=redis.Redis(host='ner_storage', port=6379, db=0, decode_responses=True)
 
 @app.route('/api/NERs/<ner_name>', methods=['GET'])
 def get_NER(ner_name):
@@ -42,5 +44,4 @@ def get_NERs_list():
 
 
 if __name__ == '__main__':
-    r=redis.Redis(host='ner_storage', port=6379, db=0, decode_responses=True)
     app.run(debug=True,host='0.0.0.0', port=5000)

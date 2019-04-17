@@ -1,0 +1,4 @@
+redis
+nltk
+spacy
+tqdm
