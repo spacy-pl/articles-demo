@@ -10,7 +10,6 @@ Run
 docker-compose build
 ```
 in main folder.
-That's all!
 
 
 ## Built With
