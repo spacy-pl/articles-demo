@@ -5,7 +5,9 @@ Installed docker and docker-compose.
 
 ## Installing and deployment
 
-Run 
+
+Get file `articles.json` from repository https://github.com/spacy-pl/utils (folder data/scrapping, on branch feature/scrapping) and put it in folder `process`.
+Then run 
 ```
 docker-compose build
 ```

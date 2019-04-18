@@ -1,8 +1,0 @@
-md5: a76656454b39085b497ff08ce06d4db7
-outs:
-- cache: true
-  md5: 66b473b5401f4d14b014a9ac594d18e0
-  metric: false
-  path: articles.json
-  persist: false
-wdir: .
