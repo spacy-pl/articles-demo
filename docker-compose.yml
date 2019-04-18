@@ -32,4 +32,3 @@ services:
     
 volumes:
   redis_store:
-    external: true
