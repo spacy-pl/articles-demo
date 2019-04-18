@@ -11,7 +11,7 @@ services:
     restart: "on-failure"
     volumes:
       - "./web:/code"
-    depends_on: 
+    depends_on:
       - "ner_storage"
 
   ner_storage:
@@ -23,12 +23,12 @@ services:
 
   processor:
     image: "python"
-    depends_on: 
+    depends_on:
       - "ner_storage"
     build:
       context: ./process
       dockerfile: Dockerfile
     command: "python process.py"
-    
+
 volumes:
   redis_store:
