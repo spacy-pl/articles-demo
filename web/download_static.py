@@ -4,23 +4,29 @@ import os
 import zipfile
 
 
+static_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
+
 files = [
     {
         'url': 'https://github.com/uikit/uikit/releases/download/v3.0.3/uikit-3.0.3.zip',
-        'dest': 'lib/uikit/',
+        'dest': os.path.join(static_dir, 'lib/uikit/'),
     },
     {
-        'url': 'https://github.com/axios/axios/archive/v0.18.0.zip',
-        'dest': 'lib/axios/',
+        'url': 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js',
+        'dest': os.path.join(static_dir, 'lib/axios/axios.js'),
     },
     {
         'url': 'https://d3js.org/d3.v3.js',
-        'dest': 'lib/d3/d3.v3.js',
+        'dest': os.path.join(static_dir, 'lib/d3/d3.v3.js'),
     },
     {
         'url': 'https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js',
-        'dest': 'lib/d3-cloud/d3.layout.cloud.js',
+        'dest': os.path.join(static_dir, 'lib/d3-cloud/d3.layout.cloud.js'),
     },
+    {
+        'url': 'https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.4/awesomplete.js',
+        'dest': os.path.join(static_dir, 'lib/awesomplete/awesomplete.js'),
+    }
 ]
 
 
@@ -41,10 +47,12 @@ def download_zip(url, dest):
 
 
 if __name__ == '__main__':
+    print(static_dir)
     for file_data in files:
         print("Downloading: " + file_data['url'])
         if file_data['url'][-3:] == 'zip':
             download_zip(**file_data)
         else:
             download_file(**file_data)
+        print("Saved: " + file_data['dest'])
     print('Done.')
