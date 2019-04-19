@@ -38,6 +38,7 @@ bundles = {
         'lib/axios/axios.js',
         'lib/d3/d3.v3.js',
         'lib/d3-cloud/d3.layout.cloud.js',
+        'lib/awesomplete/awesomplete.js',
         'src/demo.js',
         'src/wordcloud.js',
         output='build/bundle.js',

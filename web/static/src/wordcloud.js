@@ -2,14 +2,12 @@ const fill = d3.scale.category20();
 
 const wordCloudSize = [640, 480];
 let ners = [];
-let nerSuggestions = [];
-const maxNerSuggestions = 10;
-const minQueryLength = 3;
 const maxAdjFontSize = 128;
 const minAdjFontSize = 16;
 
 function draw(words) {
     // Taken from https://github.com/jasondavies/d3-cloud/tree/v1.2.5
+    d3.select("svg").remove();  // replace previous wordcloud
     d3.select("#wordcloud").append("svg")
         .attr("width", wordCloudSize[0])
         .attr("height", wordCloudSize[1])
@@ -31,14 +29,24 @@ function draw(words) {
 
 function parseAndScale(responseData) {
     let adjectives = Object.keys(responseData);
+    const maxAll = adjectives => {
+        return adjectives.map(adj =>{
+            return {
+                text: adj,
+                size: maxAdjFontSize
+            };
+        });
+    }
+    if (adjectives.length <= 1) return maxAll(adjectives);
+
     let counts = adjectives.map(adj => parseInt(responseData[adj]));
     let minCount = Math.min(...counts);
     let maxCount = Math.max(...counts);
-    console.log(counts, minCount, maxCount);
+    if (minCount == maxCount) return maxAll(adjectives);
+
     let scale = (maxAdjFontSize-minAdjFontSize) / (maxCount-minCount);
     const scaleCount = realCount => scale*realCount + minAdjFontSize - scale*minCount;
     return adjectives.map(adj =>{
-        console.log(scaleCount(responseData[adj]));
         return {
             text: adj,
             size: scaleCount(responseData[adj])
@@ -73,25 +81,24 @@ function wordcloudHandler(inputElement, _) {
     });
 }
 
-function getNers() {
+function setNerAutocomplete(elementId) {
+    const nerInputElement = document.getElementById(`${elementId}-input`);
     axios.get('/api/NERs').then(response => {
-        ners = Array.from(response.data).map(s => s.toLowerCase());
-        nerSuggestions = [];
+        ners = Array.from(response.data);
+        ac = new Awesomplete(nerInputElement, {
+            list: ners,
+            minChars: 2,
+            maxItems: 10,
+            container: _ => document.getElementById(`${elementId}-container`)
+        });
+        document.getElementById('awesomplete_list_1').classList.add('uk-nav');
+        return ac;
     }).catch(error => {
         console.log(error);
     });
 }
 
-function filterSuggestions(query) {  // TODO: Use these suggestions
-    if (query.length >= minQueryLength) {
-        nerSuggestions = ners.filter(ner => ner.includes(query.toLowerCase()));
-        if (nerSuggestions.length > maxNerSuggestions) {
-            nerSuggestions = [];
-        }
-    }
-}
-
 UIkit.util.ready(() => {
-    getNers();
+    setNerAutocomplete('ner-wordcloud');
     addDemoEventListenerWithDefaulNaming('ner-wordcloud', wordcloudHandler);
 });
