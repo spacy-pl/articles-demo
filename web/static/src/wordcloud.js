@@ -1,12 +1,16 @@
 const fill = d3.scale.category20();
 
-const wordCloudSize = [640, 480];
+// computed later
+let wordCloudSize = [640, 480];  // width, height
 let ners = [];
-const maxAdjFontSize = 128;
-const minAdjFontSize = 16;
+
+// updated dynamically when viewport changes:
+let maxAdjFontSize = 128;
+let minAdjFontSize = 16;
 
 function draw(words) {
     // Taken from https://github.com/jasondavies/d3-cloud/tree/v1.2.5
+    setWordCloudSize('wordcloud');
     d3.select("svg").remove();  // replace previous wordcloud
     d3.select("#wordcloud").append("svg")
         .attr("width", wordCloudSize[0])
@@ -44,6 +48,8 @@ function parseAndScale(responseData) {
     let maxCount = Math.max(...counts);
     if (minCount == maxCount) return maxAll(adjectives);
 
+    maxAdjFontSize = Math.min(maxAdjFontSize, Math.max(...wordCloudSize) / 8);
+    minAdjFontSize = Math.max(minAdjFontSize, Math.min(...wordCloudSize) / 8);
     let scale = (maxAdjFontSize-minAdjFontSize) / (maxCount-minCount);
     const scaleCount = realCount => scale*realCount + minAdjFontSize - scale*minCount;
     return adjectives.map(adj =>{
@@ -91,14 +97,24 @@ function setNerAutocomplete(elementId) {
             maxItems: 10,
             container: _ => document.getElementById(`${elementId}-container`)
         });
-        document.getElementById('awesomplete_list_1').classList.add('uk-nav');
+        document.getElementById('awesomplete_list_1').classList.add('uk-list', 'uk-list-divider');
         return ac;
     }).catch(error => {
         console.log(error);
     });
 }
 
+function setWordCloudSize(elementId) {
+    let element = document.getElementById(elementId);
+    wordCloudSize = [
+        Math.min(1280, document.documentElement.clientWidth * 3 / 4),
+        Math.max(480, document.documentElement.clientHeight / 4)
+    ];
+    return wordCloudSize;
+}
+
 UIkit.util.ready(() => {
+    setWordCloudSize('wordcloud');
     setNerAutocomplete('ner-wordcloud');
     addDemoEventListenerWithDefaulNaming('ner-wordcloud', wordcloudHandler);
 });

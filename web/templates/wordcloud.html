@@ -5,13 +5,15 @@
     </div>
     <form action="/api/NERs" id="ner-wordcloud" method="post">
         <div id="ner-wordcloud-container" class="uk-margin" uk-margin>
-            <input class="uk-input uk-form-width-large"
-                    id="ner-wordcloud-input"
-                    type="text" name="query" placeholder="Barack Obama" value="Barack Obama">
-            <button class="uk-button uk-button-default"
-                    id="ner-wordcloud-submit"
-                    type="submit" form="search" value="Submit">
-                Search
+            <div class="uk-width-1-1 uk-align-center">
+                <input class="uk-input uk-form-width-large"
+                        id="ner-wordcloud-input"
+                        type="text" name="query" placeholder="Barack Obama" value="Barack Obama">
+                <button class="uk-button uk-button-default"
+                        id="ner-wordcloud-submit"
+                        type="submit" form="search" value="Submit">
+                    Search
+            </div>
             </button>
         </div>
     </form>
