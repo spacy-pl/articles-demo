@@ -5,8 +5,8 @@ from nltk.probability import FreqDist
 import redis
 from tqdm import tqdm
 
-MODEL_PATH = 'en_core_web_sm'
-CHOOSEN_POS = 'VERB'
+MODEL_PATH = 'pl_model'
+CHOOSEN_POS = 'ADJ'
 LABELS = ['PERSON']
 
 def generate_terms_dict(docs):
@@ -24,6 +24,7 @@ def generate_terms_dict(docs):
                     terms[normalized_ent]=[]
 
                 sentence = ent.sent
+                print(ent, sentence)
                 for token in sentence:
                     if token.pos_ == CHOOSEN_POS:
                         terms[normalized_ent].append(token.lemma_)
