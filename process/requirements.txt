@@ -1,4 +1,4 @@
 redis
 nltk
-spacy
+https://github.com/spacy-pl/spaCy/archive/feature/faster-pl-lemmatizer.zip
 tqdm
