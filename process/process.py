@@ -12,7 +12,7 @@ LABELS = ['PERSON']
 def generate_terms_dict(docs):
     all_entities = set()
     terms = dict()
-    
+    termcount=0
     for doc in docs:
         ents = doc.ents
         
@@ -27,8 +27,18 @@ def generate_terms_dict(docs):
                 print(ent, sentence)
                 for token in sentence:
                     if token.pos_ == CHOOSEN_POS:
+                        termcount += 1
                         terms[normalized_ent].append(token.lemma_)
-                    
+
+    print("extracted " + str(termcount) + " terms.")
+    final_terms=dict()
+    for ent in terms:
+        if len(terms[ent])!=0:
+            final_terms[ent] = terms[ent]
+            print(ent)
+        else:
+            all_entities.remove(ent)
+
     return all_entities, terms
 
 arts = json.load(open('articles.json'))
