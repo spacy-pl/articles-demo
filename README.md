@@ -7,17 +7,16 @@ Installed docker and docker-compose.
 
 
 Get file `articles.json` from repository https://github.com/spacy-pl/utils (folder data/scrapping, on branch feature/scrapping) and put it in folder `process`.
-Then run 
+Then run
 ```
-# download static files necessary for web app to run
-pip install requests
-python web/download_static.py
-
-# build all docker images
 docker-compose build
 ```
 in main folder.
 
+Libraries that will be packaged for the web app can be downloaded by running
+`
+python download_static.py
+`
 
 ## Built With
 

@@ -9,5 +9,8 @@ WORKDIR /code
 ADD requirements.txt /code
 RUN pip install -r requirements.txt
 
+ADD download_static.py /code
+RUN python download_static.py
+
 ADD app.py /code/app.py
 ADD . /code/
