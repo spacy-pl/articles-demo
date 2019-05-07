@@ -1,26 +1,43 @@
 <!-- WORDCLOUD PAGE -->
-<div class="uk-container uk-margin-bottom" id="home-content">
-    <div class="uk-padding-large uk-padding-remove-vertical">
-        <progress id="ner-wordcloud-progressbar" class="uk-progress" value="0" max="100"></progress>
-    </div>
-    <form action="/api/NERs" id="ner-wordcloud" method="post">
-        <div id="ner-wordcloud-container" class="uk-margin" uk-margin>
-            <div class="uk-width-1-1 uk-align-center">
-                <input class="uk-input uk-form-width-large"
-                        id="ner-wordcloud-input"
-                        type="text" name="query" placeholder="Barack Obama" value="Barack Obama">
-                <button class="uk-button uk-button-default"
-                        id="ner-wordcloud-submit"
-                        type="submit" form="search" value="Submit">
-                    Search
-            </div>
-            </button>
+<div id="home-content"
+     class="uk-container uk-padding-remove uk-margin-bottom"
+     uk-height-viewport="expand: true">
+    <div class="uk-grid-collapse
+                uk-text-center
+                uk-padding-remove"
+    uk-grid
+    uk-height-viewport="expand: true">
+        <div class="uk-width-1-4@m uk-padding-remove uk-margin-remove uk-card uk-card-default uk-card-body">
+                <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+            <form id="ner-wordcloud"
+                  class="uk-search uk-search-default uk-width-expand"
+                  action="/api/NERs"
+                  method="post"
+                  autocomplete="off">
+                <a id="ner-wordcloud-submit" class="uk-search-icon-flip" href="" uk-search-icon></a>
+                <input id="ner-wordcloud-input"
+                       class="uk-search-input"
+                       type="search"
+                       placeholder="Search">
+            </form>
+            <ul id="ner-wordcloud-list"
+                class="uk-nav uk-nav-default">
+            </ul>
         </div>
-    </form>
-
-    <div class="wordcloud-wrapper">
-            <div id="wordcloud">
-                <!-- Wordcloud will be generated here. -->
+        <div class="uk-width-expand@m" id="wordcloud-grid-panel">
+            <div class="uk-padding-large uk-padding-remove-vertical">
+                <progress id="ner-wordcloud-progressbar"
+                          class="uk-progress"
+                          value="0"
+                          max="100">
+                </progress>
             </div>
+
+            <div class="wordcloud-wrapper">
+                <div id="wordcloud">
+                    <!-- Wordcloud will be generated here. -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>

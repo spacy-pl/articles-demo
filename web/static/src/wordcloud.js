@@ -1,5 +1,3 @@
-const fill = d3.scale.category20();
-
 // computed later
 let wordCloudSize = [640, 480];  // width, height
 let ners = [];
@@ -7,29 +5,6 @@ let ners = [];
 // updated dynamically when viewport changes:
 let maxAdjFontSize = 128;
 let minAdjFontSize = 16;
-
-function draw(words) {
-    // Taken from https://github.com/jasondavies/d3-cloud/tree/v1.2.5
-    setWordCloudSize('wordcloud');
-    d3.select("svg").remove();  // replace previous wordcloud
-    d3.select("#wordcloud").append("svg")
-        .attr("width", wordCloudSize[0])
-        .attr("height", wordCloudSize[1])
-        .attr("class", "uk-align-center")
-    .append("g")
-        .attr("transform", "translate(" + wordCloudSize[0] / 2 + "," + wordCloudSize[1] / 2 + ")")
-    .selectAll("text")
-        .data(words)
-    .enter().append("text")
-        .style("font-size", function(d) { return d.size + "px"; })
-        .style("font-family", "Impact")
-        .style("fill", function(d, i) { return fill(i); })
-        .attr("text-anchor", "middle")
-        .attr("transform", function(d) {
-            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .text(function(d) { return d.text; });
-}
 
 function parseAndScale(responseData) {
     let adjectives = Object.keys(responseData);
@@ -70,15 +45,6 @@ function wordcloudHandler(inputElement, _) {
     // query search endpoint
     axios.get(`/api/NERs/${inputElement.value}`).then(response => {
         console.log(response);
-        d3.layout.cloud()
-            .size(wordCloudSize)
-            .words(parseAndScale(response.data))
-            .padding(5)
-            .rotate(() => ~~(Math.random() * 2) * 90)
-            .font("Impact")
-            .fontSize(d => d.size)
-            .on("end", draw)
-            .start();
         clearInterval(timer);
         smoothProgressbarComplete(progressBar);
     }).catch(error => {
@@ -87,18 +53,60 @@ function wordcloudHandler(inputElement, _) {
     });
 }
 
+function selectFromList(formElement, inputElement, listElement) {
+    // first child of the listElement is the anchor containing named entity
+    inputElement.value = listElement.firstChild.innerText;
+    listElement.classList.add('uk-active');
+    let submitEvent = new Event('submit');
+    formElement.dispatchEvent(submitEvent);
+}
+
+function filterListByInput(formElement, inputElement,
+            listElement, possibleItems, minListItems=3) {
+    if (inputElement.value.length < minListItems) return;
+    // clear the list
+    while (listElement.firstChild) {
+        listElement.removeChild(listElement.firstChild);
+    }
+    // append all items matching input value to the list
+    possibleItems.filter(item => {
+        return item.toLowerCase().includes(inputElement.value.toLowerCase())
+    }).forEach(matchingItem => {
+        let newItem = document.createElement("li");
+        let newAnchor = document.createElement("a");
+        newAnchor.innerText = matchingItem;
+        newAnchor.href = "#!"
+        let boundSelectItemHandler = selectFromList.bind(
+            null,
+            formElement,
+            inputElement,
+            newItem);
+        newAnchor.addEventListener("click", event => {
+            event.preventDefault();
+            boundSelectItemHandler();
+            return false;
+        });
+        newItem.appendChild(newAnchor);
+        listElement.appendChild(newItem);
+    });
+}
+
 function setNerAutocomplete(elementId) {
     const nerInputElement = document.getElementById(`${elementId}-input`);
+    const nerFormElement = document.getElementById(elementId);
+    const nerListElement = document.getElementById(`${elementId}-list`);
     axios.get('/api/NERs').then(response => {
         ners = Array.from(response.data);
-        ac = new Awesomplete(nerInputElement, {
-            list: ners,
-            minChars: 2,
-            maxItems: 10,
-            container: _ => document.getElementById(`${elementId}-container`)
+        const boundFilterHandler = filterListByInput.bind(
+            null,
+            nerFormElement,
+            nerInputElement,
+            nerListElement,
+            ners);
+        nerInputElement.addEventListener('keydown', event => {
+            boundFilterHandler();
         });
-        document.getElementById('awesomplete_list_1').classList.add('uk-list', 'uk-list-divider');
-        return ac;
+        filterListByInput(nerFormElement, nerInputElement, nerListElement, ners, 0);
     }).catch(error => {
         console.log(error);
     });
@@ -107,8 +115,8 @@ function setNerAutocomplete(elementId) {
 function setWordCloudSize(elementId) {
     let element = document.getElementById(elementId);
     wordCloudSize = [
-        Math.min(1280, document.documentElement.clientWidth * 3 / 4),
-        Math.max(480, document.documentElement.clientHeight / 4)
+        document.getElementById('wordcloud-grid-panel').offsetWidth,
+        document.getElementById('wordcloud-grid-panel').offsetHeight
     ];
     return wordCloudSize;
 }
