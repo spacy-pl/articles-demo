@@ -16,16 +16,8 @@ files = [
         'dest': os.path.join(static_dir, 'lib/axios/axios.js'),
     },
     {
-        'url': 'https://d3js.org/d3.v3.js',
-        'dest': os.path.join(static_dir, 'lib/d3/d3.v3.js'),
-    },
-    {
-        'url': 'https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js',
-        'dest': os.path.join(static_dir, 'lib/d3-cloud/d3.layout.cloud.js'),
-    },
-    {
-        'url': 'https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.4/awesomplete.js',
-        'dest': os.path.join(static_dir, 'lib/awesomplete/awesomplete.js'),
+        'url': 'https://raw.githubusercontent.com/timdream/wordcloud2.js/gh-pages/src/wordcloud2.js',
+        'dest': os.path.join(static_dir, 'lib/wordcloud/wordcloud.js')
     }
 ]
 
