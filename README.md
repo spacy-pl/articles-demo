@@ -13,11 +13,6 @@ docker-compose build
 ```
 in main folder.
 
-Libraries that will be packaged for the web app can be downloaded by running
-`
-python download_static.py
-`
-
 ## Built With
 
 * [Flask](http://flask.pocoo.org/) - Web microframework
@@ -29,7 +24,7 @@ python download_static.py
 
 * **Stanisław Giziński**
 
-## License
+## Licenses
 
 This project is licensed under the MIT License.
 
